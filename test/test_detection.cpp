@@ -7,8 +7,13 @@ void* callback_func(std::vector<TF_Tensor*> TF_tensors) {
     auto detection_num = static_cast<float_t*>(TF_TensorData(TF_tensors[3]));
     std::cout << detection_scores[0] << " " << detection_classes[0] << " " << detection_boxes[0] << " " << detection_num[0]<< std::endl;
     for (int i = 0; i < int(*detection_num); ++i) {
-        std::cout << "class: "<< detection_classes[i] << std::endl;
+        int idx = i*4;
+        std::cout << detection_boxes[idx +1] << " " << detection_boxes[idx]
+        << " " << detection_boxes[idx+3] << " " << detection_boxes[idx+2];
     }
+
+
+
     void * return_values = &TF_tensors;
     return return_values;
 }
@@ -42,7 +47,7 @@ int t;
 
 
 //To do
-for (t = 0; t < 6; t++) {
+for (t = 0;  ; t++) {
     start=clock();
     std::cout << std::endl;
     std::cout << t << "s number of time: ";

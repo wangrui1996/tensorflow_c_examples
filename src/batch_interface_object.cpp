@@ -64,6 +64,7 @@ void Network::LoadGraph(std::string modelPath)
     TF_SessionOptions* options = TF_NewSessionOptions();
     session = TF_NewSession(graph, options, status);
     TF_DeleteSessionOptions(options);
+    TF_DeleteStatus(status);
 }
 
 void Network::Run(cv::Mat image, callback func)
@@ -93,6 +94,8 @@ void Network::Run(cv::Mat image, callback func)
     {
         printf("ERROR: SessionRun: %s", TF_Message(status));
     }
+
+    TF_DeleteStatus(status);
 
     (*func)(output_values);
 
