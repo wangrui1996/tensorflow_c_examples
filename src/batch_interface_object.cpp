@@ -65,22 +65,25 @@ void Network::LoadGraph(std::string modelPath)
     session = TF_NewSession(graph, options, status);
     TF_DeleteSessionOptions(options);
     TF_DeleteStatus(status);
+    input_tensors.push_back({TF_GraphOperationByName(graph, input_names[0].c_str()),0});
+    size_t i;
+    for (i = 0; i < output_names.size(); ++i) {
+        output_tensors.push_back({ TF_GraphOperationByName(graph, output_names[i].c_str()),0 });
+    }
+    TF_DeleteGraph(graph);
 }
 
 void Network::Run(cv::Mat image, callback func)
 {
-    std::vector<TF_Output> 	input_tensors, output_tensors;
-    std::vector<TF_Tensor*> input_values, output_values;
-
     //input tensor shape.
     int num_dims = 4;
     std::int64_t input_dims[4] = {1, image.rows, image.cols, 3}; //1 is number of batch, and 3 is the no of channels.
     int num_bytes_in = image.cols * image.rows * 3; //3 is the number of channels.
-    input_tensors.push_back({TF_GraphOperationByName(graph, input_names[0].c_str()),0});
+    input_values.clear();
     input_values.push_back(TF_NewTensor(TF_UINT8, input_dims, num_dims, image.data, num_bytes_in, &Deallocator, 0));
     size_t i;
+    output_values.clear();
     for (i = 0; i < output_names.size(); ++i) {
-        output_tensors.push_back({ TF_GraphOperationByName(graph, output_names[i].c_str()),0 });
         output_values.push_back(nullptr);
     }
 

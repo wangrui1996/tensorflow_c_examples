@@ -31,6 +31,8 @@ private:
     TF_Session* session;
     TF_Graph* graph;
     std::vector<std::string> input_names, output_names;
+    std::vector<TF_Output> 	input_tensors, output_tensors;
+    std::vector<TF_Tensor*> input_values, output_values;
 };
 
 
